@@ -1,0 +1,11 @@
+{% for t in tables.keys() %}
+    <h2>{{ t }}</h2>
+
+    <div class="custom-select" style="width:80%;"> 
+        <select>
+    {% for i in range((tables[t]) | count) %}
+            <option value={{ i | add_quotes }}>{{ tables[t][i]}}</option>
+    {% endfor %}
+        </select>
+    </div>
+{% endfor %}

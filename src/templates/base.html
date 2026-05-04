@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skyrim character generator</title>
+    <link rel="stylesheet" href="static/css/default.css">
+    <link rel="stylesheet" href="static/css/dropdown.css">
+
+</head>
+<body>
+<script>
+const DATA = new Map();
+
+{% for name, value in tables.items() %}
+    DATA.set(
+        {{ name | tojson }},
+        {{ value | tojson }}
+    )        
+{% endfor %}
+DATA.forEach((values, keys) => {
+    console.log(keys)
+    values.forEach((item) => {
+        console.log(item)
+    });
+});
+</script>
+
+<h1>Skyrim character generator</h1>
+<br>
+        <input type='checkbox' name='thing' value='a' id="thing"/><label for="thing"></label>
+        <button class="roll">
+            roll
+        </button>
+<script src="./static/js/test.js"></script>
+<script src="./static/js/dropdown.js"></script>
+<script>
+</script>
+</body>
+</html>
