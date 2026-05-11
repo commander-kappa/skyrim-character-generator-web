@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<script>
+    //PASSING DATA
+    const DATA = new Map();
+    
+    {% for name, value in tables.items() %}
+        DATA.set(
+            {{ name | tojson }},
+            {{ value | tojson }}
+        )        
+    {% endfor %}
+</script>
+
+<h1>Skyrim Character Generator</h1>
+<div id="title">
+    <img src="../static/img/tesv.png" width="50%">
+</div>
+
+{% set dropdown_menus = {
+    'Race': 'Race',
+    'Birthsign': 'Sign',
+    'Religion': 'Religion',
+    'Major Skill 1': 'Skill',
+    'Major Skill 2': 'Skill',
+    'Major Skill 3': 'Skill',
+    'Personality': 'Personality',
+    'Start': 'Start',
+    'Specification': 'Specification'
+}%}
+<div id="attribute_container">
+    <div id="attributes">
+        {% for key, val in dropdown_menus.items() %}
+        <div class="containerbar" id="attribute_{{ key | idify }}" data-type="{{ val }}">
+            <p class="testlabel">{{ key }}</p>
+            <div class="testbar">
+                <div class="custom-select" id="select_{{ key | idify }}">
+                    <select id="{{ key | idify }}">
+                        <option value="0">Select {{ key }}</option>
+                    </select>
+                </div>
+            </div>
+            <input type='checkbox' name="{{ key }}" id="lock_{{ key | idify }}"/><label for="lock_{{ key | idify }}"></label>
+            <button class="roll" id="roll_{{ key | idify }}">roll</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script src="../static/js/dropdown.js"></script>
+<script src="../static/js/app.js"></script>
+{% endblock %}

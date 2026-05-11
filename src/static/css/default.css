@@ -3,10 +3,10 @@ body {
     margin: 0;
     padding: 20px;
     background-color: #222222;
-    /*background-image: url("../img/nordicbg.png");
-    background-size: 1920 1080;
+    background-image: url("../img/nordicbg.png");
+    background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;*/
+    background-repeat: no-repeat;
 }
 
 h1, h2 {
@@ -61,7 +61,7 @@ h1, h2 {
 }
 
 
-#containerbar {
+.containerbar {
     display: flex;
     align-items: center;
     justify-content: start;
@@ -156,13 +156,18 @@ input[type=checkbox]:hover:not(:checked) + label    {
     padding: 0 0 0 0px;
 }
 
-#testlabel {
+.testlabel {
     font-size: 1.25em;
     color: #dddddd;
     justify-self: flex-start;
 }
 
-#testbar {
+#title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.testbar {
     background-image: url("../img/compass_wide.png");
     color:#dddddd;
     height: 55px;
@@ -179,6 +184,11 @@ input[type=checkbox]:hover:not(:checked) + label    {
     margin-left: auto;
 }
 
+#attribute_container {
+    display: flex;
+    justify-content: center;
+   
+}
 #attributes {
     background-image: url("../img/card_tall.png");
     background-position: center;
@@ -186,7 +196,7 @@ input[type=checkbox]:hover:not(:checked) + label    {
     background-size: 100% 100%;
 
     min-height: 800px;
-    min-width: max-content;
+    min-width: 80%;
     max-width: 1000px;
     padding-left: 90px;
     padding-right: 90px;

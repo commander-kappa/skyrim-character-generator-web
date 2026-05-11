@@ -6,6 +6,10 @@ the container must be positioned relative:
 .custom-select {
   position: relative;
   font-family: Arial;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+
 }
 
 .custom-select select {
@@ -14,6 +18,8 @@ the container must be positioned relative:
 
 .select-selected {
   /*background-color: #111;*/
+  width: 100%;
+  text-align: center;
 }
 
 /*style the arrow inside the select element:*/
@@ -21,7 +27,6 @@ the container must be positioned relative:
   position: absolute;
   content: "";
   top: 5px;
-  right: 10px;
   width: 0;
   height: 0;
   border: 16px solid transparent;
@@ -64,4 +69,7 @@ the container must be positioned relative:
 
 .select-items div:hover, .same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
+}
+.select-items .same-as-selected {
+  color: #666
 }

@@ -5,6 +5,8 @@ import json
 import model
 import exceptions as exc
 
+#VALIDATE SHEET
+
 def get_model(name:str):
     if name in model.TABLES:
         return getattr(model, name)
@@ -27,6 +29,10 @@ def register_routes(app, db):
     def add_quotes(inStr:str) -> str:
         return f"\"{inStr}\""
 
+    @app.template_filter('idify')
+    def idify(inStr:str) -> str:
+        return inStr.replace(' ', '_').lower()
+
     @app.template_filter('get_table_json')
     def get_table_json(table_name:str) -> list:
         return f"{get_query_json(table_name)}"
@@ -42,7 +48,9 @@ def register_routes(app, db):
 
     @app.route("/")
     def index():
-        tables = {}        
+        tables = {}
+        
         for table_name in model.TABLES:
             tables[table_name] = get_query_json(table_name)
-        return render_template('base.html', tables=tables)
+
+        return render_template('index.html', tables=tables)

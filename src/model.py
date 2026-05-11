@@ -27,6 +27,16 @@ class Sign(db.Model):
     def __repr__(self): 
         return f"{self.name}"
 
+class Religion(db.Model):
+    TABLES.append(__qualname__)
+    __tablename__ = 'religion'
+    
+    id = db.Column(db.SmallInteger, primary_key=True, nullable=False, autoincrement=True)
+    name = db.Column(db.String(32), nullable=False)
+
+    def __repr__(self): 
+        return f"{self.name}"
+
 class Skill(db.Model):
     TABLES.append(__qualname__)
     __tablename__ = 'skill'
@@ -71,16 +81,6 @@ class Specification(db.Model):
     def __repr__(self): 
         return f"{self.name}"
 
-class Religion(db.Model):
-    TABLES.append(__qualname__)
-    __tablename__ = 'religion'
-    
-    id = db.Column(db.SmallInteger, primary_key=True, nullable=False, autoincrement=True)
-    name = db.Column(db.String(32), nullable=False)
-
-    def __repr__(self): 
-        return f"{self.name}"
-
 class RaceToReligion(db.Model):
     TABLES.append(__qualname__)
     __tablename__ = 'race_to_religion'
@@ -102,7 +102,8 @@ class SkillToSkill(db.Model):
         return f"{self.one} -> {self.two}"
 
 class Sheet(db.Model):
-    TABLES.append(__qualname__)
+    #INFO: Sheets should be seperate
+    #TABLES.append(__qualname__)
     __tablename__ = 'sheet'
     
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)

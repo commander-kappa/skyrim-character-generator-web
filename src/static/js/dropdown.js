@@ -30,9 +30,10 @@ for (i = 0; i < l; i++) {
     c = document.createElement("DIV");
     c.innerHTML = selElmnt.options[j].innerHTML;
     
+    /*
     c.addEventListener("click", function(e) {
         /* When an item is clicked, update the original select box,
-        and the selected item: */
+        and the selected item: * /
 
         var y, i, k, s, h, sl, yl;
 
@@ -63,6 +64,7 @@ for (i = 0; i < l; i++) {
         }
         h.click();
     });
+    */
     b.appendChild(c);
   }
   
