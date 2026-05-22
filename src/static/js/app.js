@@ -1,6 +1,16 @@
 //INFO: DATA Map will be inserted by Server Template
 var PROXY = DATA; //as Map<string(dataType), Array<Object>
-var ATTRIBUTE_MAP = {}; //Map<attdsibuteId, dataType>
+var ATTRIBUTES = [
+    'race',
+    'birthsign',
+    'religion',
+    'major_skill_1',
+    'major_skill_2',
+    'major_skill_3',
+    'personality',
+    'start',
+    'specification'
+];
 var attributesContainer = document.getElementById('attributes');
 var attributesCollection = attributesContainer === null || attributesContainer === void 0 ? void 0 : attributesContainer.children;
 function setSelectOption(attribute_id, value, name) {
@@ -39,11 +49,9 @@ function blockSKillOptions(ids) {
     for (var i = 1; i < 4; i++) {
         var customSelect = document.getElementById('select_major_skill_' + i);
         var customSelectItems = (_a = customSelect.children.item(2)) === null || _a === void 0 ? void 0 : _a.children;
-        console.log(ids);
         for (var _i = 0, _b = Array.from(customSelectItems); _i < _b.length; _i++) {
             var item = _b[_i];
             var val = 0;
-            console.log(item.dataset.id);
             if (item.dataset.id) {
                 val = parseInt(item.dataset.id);
             }
@@ -62,12 +70,15 @@ function createCustomOptionElement(name, data_id) {
     optionElement.setAttribute('data-id', data_id);
     optionElement.addEventListener('click', function (event) {
         var _a, _b, _c, _d;
-        console.log("CLICK!");
         var thisElement = event.target;
         if (thisElement.classList.contains('same-as-selected')) {
             return;
         }
         var custom_select_items = thisElement.parentElement;
+        var customSelect = custom_select_items.parentElement;
+        if (customSelect.classList.contains('locked-skill')) {
+            return;
+        }
         for (var _i = 0, _e = custom_select_items.children; _i < _e.length; _i++) {
             var select_item = _e[_i];
             if (select_item.classList.contains('same-as-selected')) {
@@ -100,8 +111,8 @@ function createCustomOptionElement(name, data_id) {
                     loadSelectDataFor('start');
                 }
                 else {
-                    var customSelect = document.getElementById('select_start');
-                    var customSelectOptionContainer = customSelect.children.item(2);
+                    var customSelect_1 = document.getElementById('select_start');
+                    var customSelectOptionContainer = customSelect_1.children.item(2);
                     var customSelectOptions = customSelectOptionContainer === null || customSelectOptionContainer === void 0 ? void 0 : customSelectOptionContainer.children;
                     for (var _f = 0, _g = PROXY.get('Start'); _f < _g.length; _f++) {
                         var start = _g[_f];
@@ -236,16 +247,50 @@ function loadSelectDataFor(id) {
             break;
     }
 }
+function rollAttribute(id) {
+    var customSelect = document.getElementById('select_' + id);
+    if (!customSelect.classList.contains('locked-skill')) {
+        var customSelectItems = customSelect.children.item(2);
+        var size = customSelectItems.children.length;
+        var pick = Math.floor(Math.random() * size);
+        var pickedAttribute = customSelectItems.children.item(pick);
+        console.log('Rolled ' + pick + ', Attribute ' + pickedAttribute.innerHTML);
+        pickedAttribute.click();
+    }
+}
+function rollAll() {
+    for (var _i = 0, ATTRIBUTES_1 = ATTRIBUTES; _i < ATTRIBUTES_1.length; _i++) {
+        var attribute = ATTRIBUTES_1[_i];
+        rollAttribute(attribute);
+    }
+}
 function initDropdown() {
-    loadSelectDataFor('race');
-    loadSelectDataFor('birthsign');
-    loadSelectDataFor('religion');
-    loadSelectDataFor('major_skill_1');
-    loadSelectDataFor('major_skill_2');
-    loadSelectDataFor('major_skill_3');
-    loadSelectDataFor('personality');
-    loadSelectDataFor('start');
-    loadSelectDataFor('specification');
+    var _a, _b, _c;
+    for (var _i = 0, ATTRIBUTES_2 = ATTRIBUTES; _i < ATTRIBUTES_2.length; _i++) {
+        var attribute = ATTRIBUTES_2[_i];
+        loadSelectDataFor(attribute);
+        (_a = document.getElementById('lock_' + attribute)) === null || _a === void 0 ? void 0 : _a.addEventListener('change', function (event) {
+            var target = event.target;
+            var id = target.id.replace('lock_', '');
+            var customSelect = document.getElementById('select_' + id);
+            if (target.checked) {
+                customSelect.classList.add('locked-skill');
+                console.log('Locked ' + id);
+            }
+            else {
+                customSelect.classList.remove('locked-skill');
+                console.log('Unlocked ' + id);
+            }
+        });
+        (_b = document.getElementById('roll_' + attribute)) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function (event) {
+            var target = event.target;
+            rollAttribute(target.id.replace('roll_', ''));
+        });
+        (_c = document.getElementById('roll_' + attribute)) === null || _c === void 0 ? void 0 : _c.addEventListener('keydown', function (event) {
+            var target = event.target;
+            rollAttribute(target.id.replace('roll_', ''));
+        });
+    }
 }
 initDropdown();
 PROXY.forEach(function (val, key) {

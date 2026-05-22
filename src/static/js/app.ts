@@ -1,11 +1,20 @@
 //INFO: DATA Map will be inserted by Server Template
 
 const PROXY = DATA //as Map<string(dataType), Array<Object>
-var ATTRIBUTE_MAP = {} as Map<string, string> //Map<attdsibuteId, dataType>
+const ATTRIBUTES = [
+    'race',
+    'birthsign',
+    'religion',
+    'major_skill_1',
+    'major_skill_2',
+    'major_skill_3',
+    'personality',
+    'start',
+    'specification' 
+] as Array<string>
 
 let attributesContainer = document.getElementById('attributes') as HTMLDivElement
 let attributesCollection = attributesContainer?.children as HTMLCollectionOf<HTMLElement>
-
 
 function setSelectOption(attribute_id:string, value:string, name:string): void {
     console.log(attribute_id)
@@ -38,10 +47,8 @@ function blockSKillOptions(ids: Array<Number> = [0]): void {
     for (let i = 1; i < 4; i++) {
         let customSelect = document.getElementById('select_major_skill_' + i) as HTMLDivElement
         let customSelectItems = customSelect.children.item(2)?.children as HTMLCollectionOf<HTMLDivElement>
-        console.log(ids)
         for (let item of Array.from(customSelectItems)) {
             let val = 0 as Number
-            console.log(item.dataset.id)
             if(item.dataset.id) {val = parseInt(item.dataset.id)}
             if(ids.includes(val)) {item.classList.add('same-as-selected')}
             else {item.classList.remove('same-as-selected')} 
@@ -55,11 +62,13 @@ function createCustomOptionElement(name:string, data_id:string): HTMLDivElement 
     optionElement.setAttribute('data-id', data_id)
 
     optionElement.addEventListener('click', (event: MouseEvent) => {
-        console.log("CLICK!")
-        
         let thisElement = event.target as HTMLDivElement
         if (thisElement.classList.contains('same-as-selected')) {return}
+        
         let custom_select_items = thisElement.parentElement as HTMLDivElement
+        let customSelect = custom_select_items.parentElement as HTMLDivElement 
+        if (customSelect.classList.contains('locked-skill')) {return}
+        
         for (let select_item of custom_select_items.children) {
             if (select_item.classList.contains('same-as-selected')) {
                 select_item.classList.remove('same-as-selected')
@@ -223,27 +232,52 @@ function loadSelectDataFor(id: string) {
     }
 }
 
-
-
-function initDropdown() {
-    loadSelectDataFor('race')
-    loadSelectDataFor('birthsign')
-    loadSelectDataFor('religion')
-    loadSelectDataFor('major_skill_1')
-    loadSelectDataFor('major_skill_2')
-    loadSelectDataFor('major_skill_3')
-    loadSelectDataFor('personality')
-    loadSelectDataFor('start')
-    loadSelectDataFor('specification')
+function rollAttribute(id:string): void  {
+    let customSelect = document.getElementById('select_' + id) as HTMLDivElement
+    if (!customSelect.classList.contains('locked-skill')) {
+        let customSelectItems = customSelect.children.item(2) as HTMLDivElement
+        let size = customSelectItems.children.length as number
+        let pick = Math.floor(Math.random() * size) as number
+        let pickedAttribute = customSelectItems.children.item(pick) as HTMLDivElement
+        console.log('Rolled ' + pick + ', Attribute ' + pickedAttribute.innerHTML)
+        pickedAttribute.click()
+    }
 }
 
+function rollAll(): void {
+    for (let attribute of ATTRIBUTES) {
+        rollAttribute(attribute)
+    }
+}
+
+function initDropdown(): void {
+    for(let attribute of ATTRIBUTES) {
+        loadSelectDataFor(attribute)
+        
+        document.getElementById('lock_' + attribute)?.addEventListener('change', (event: Event) => {
+            let target = event.target as HTMLInputElement;
+            let id = target.id.replace('lock_', '') as string
+            let customSelect = document.getElementById('select_' + id) as HTMLDivElement
+            
+            if(target.checked) 
+                {customSelect.classList.add('locked-skill'); console.log('Locked ' + id)}    
+            else 
+                {customSelect.classList.remove('locked-skill'); console.log('Unlocked ' + id)} 
+                       
+        });
+    
+        document.getElementById('roll_' + attribute)?.addEventListener('click', (event: MouseEvent) => {
+            let target = event.target as HTMLButtonElement
+            rollAttribute(target.id.replace('roll_', ''))
+        });
+        document.getElementById('roll_' + attribute)?.addEventListener('keydown', (event: KeyboardEvent) => {
+            let target = event.target as HTMLButtonElement
+            rollAttribute(target.id.replace('roll_', ''))
+        });
+   }
+    
+}
 initDropdown()
-
-
-
-
-
-
 
 
 PROXY.forEach((val, key) => {

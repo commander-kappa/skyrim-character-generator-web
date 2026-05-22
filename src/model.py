@@ -117,5 +117,3 @@ class Sheet(db.Model):
     skill_one = db.Column(db.SmallInteger, db.ForeignKey("skill.id"), nullable=False)
     skill_two = db.Column(db.SmallInteger, db.ForeignKey("skill.id"), nullable=False)
     skill_three = db.Column(db.SmallInteger, db.ForeignKey("skill.id"), nullable=False)        
-
-    

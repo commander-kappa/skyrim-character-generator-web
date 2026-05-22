@@ -7,5 +7,3 @@ with open('./model.py', 'r') as file:
         if line.startswith('class '):
             out = REGEX.sub('tables[\"\\1\"] = model.\\1.query.all()', line)
             print(out[:-1])
-
-

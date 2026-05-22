@@ -73,3 +73,11 @@ the container must be positioned relative:
 .select-items .same-as-selected {
   color: #666
 }
+
+.locked-skill {
+  background-color: #333;
+}
+
+.locked-skill .select-selected{
+  color:#111
+}

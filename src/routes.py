@@ -5,7 +5,7 @@ import json
 import model
 import exceptions as exc
 
-#VALIDATE SHEET
+#TODO: VALIDATE SHEET
 
 def get_model(name:str):
     if name in model.TABLES:

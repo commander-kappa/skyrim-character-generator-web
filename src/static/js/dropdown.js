@@ -72,6 +72,7 @@ for (i = 0; i < l; i++) {
   a.addEventListener("click", function(e) {
     /* When the select box is clicked, close any other select boxes,
     and open/close the current select box: */
+    if (this.parentElement.classList.contains('locked-skill')) {return}
     e.stopPropagation();
     closeAllSelect(this);
     this.nextSibling.classList.toggle("select-hide");
