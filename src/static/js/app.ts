@@ -13,6 +13,23 @@ const ATTRIBUTES = [
     'specification' 
 ] as Array<string>
 
+
+function makeRequest(json: string) {
+  const xhr = new XMLHttpRequest() as XMLHttpRequest;
+  xhr.open('POST', 'submit', true);
+  
+  xhr.setRequestHeader('Content-Type', 'application/json')
+  xhr.send(json);
+
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+        let response = xhr.responseText;
+        console.log(response);
+    }
+  }
+
+}
+
 let attributesContainer = document.getElementById('attributes') as HTMLDivElement
 let attributesCollection = attributesContainer?.children as HTMLCollectionOf<HTMLElement>
 
@@ -43,6 +60,22 @@ function getMajorSkillIDs(): Array<Number> {
     }
     return out
 }
+
+function getSkillToSkillIDs(): Array<Number> {
+    let out = [] as Array<Number> 
+    for (let i = 1; i < 4; i++) {
+        let selectElement = document.getElementById('major_skill_' + i) as HTMLSelectElement
+        let val = parseInt(selectElement.value) as Number
+        if (val == 0) {continue}
+        for (let mn of PROXY.get('SkillToSkill')) {
+            if (mn.one == val) {out.push(mn.two)}
+            else if (mn.two == val) {out.push(mn.one)}
+        }
+    }
+    console.log(out);
+    return out
+}
+
 function blockSKillOptions(ids: Array<Number> = [0]): void {
     for (let i = 1; i < 4; i++) {
         let customSelect = document.getElementById('select_major_skill_' + i) as HTMLDivElement
@@ -126,13 +159,13 @@ function createCustomOptionElement(name:string, data_id:string): HTMLDivElement 
                 }
                 break;
             case 'major_skill_1':
-                blockSKillOptions(getMajorSkillIDs())
+                blockSKillOptions(getMajorSkillIDs().concat(getSkillToSkillIDs()))
                 break;
             case 'major_skill_2':
-                blockSKillOptions(getMajorSkillIDs())
+                blockSKillOptions(getMajorSkillIDs().concat(getSkillToSkillIDs()))
                 break;
             case 'major_skill_3':
-                blockSKillOptions(getMajorSkillIDs())
+                blockSKillOptions(getMajorSkillIDs().concat(getSkillToSkillIDs()))
                 break;
             case 'start':
                 loadSelectDataFor('specification')
@@ -209,7 +242,8 @@ function loadSelectDataFor(id: string) {
             }
             loadSelectData(id, data)
             break;
-        case 'specification':
+
+            case 'specification':
             let start = document.getElementById('start') as HTMLSelectElement
             let start_id = parseInt(start.value)
             let specification = document.getElementById('attribute_specification') as HTMLDivElement
@@ -246,9 +280,29 @@ function rollAttribute(id:string): void  {
 
 function rollAll(): void {
     for (let attribute of ATTRIBUTES) {
-        rollAttribute(attribute)
+        document.getElementById('roll_' + attribute).click()
     }
 }
+
+document.getElementById('roll_all').addEventListener('click', (event: MouseEvent) => {
+  rollAll() 
+});
+
+document.getElementById('submit').addEventListener('click', (event: MouseEvent) => {
+    let sheet_attributes = [] as Array<Number>
+    for (let attribute of ATTRIBUTES) {
+        let attributeElement = document.getElementById(attribute) as HTMLSelectElement
+        sheet_attributes.push(parseInt(attributeElement.value))
+    }
+    let textElement = document.getElementById('text_name') as HTMLInputElement   
+    let sheet = {
+        name: textElement.value,
+        vals: sheet_attributes
+    }
+
+    console.log(sheet);
+    makeRequest(JSON.stringify(sheet)) 
+});
 
 function initDropdown(): void {
     for(let attribute of ATTRIBUTES) {
@@ -277,7 +331,9 @@ function initDropdown(): void {
    }
     
 }
+
 initDropdown()
+
 
 
 PROXY.forEach((val, key) => {

@@ -30,6 +30,14 @@
 }%}
 <div id="attribute_container">
     <div id="attributes">
+        <div class="containerbar" id="attribute_name" data-type="name">
+            <p class="testlabel">Name</p>
+            <div class="testbar">
+                <div class="custom-text" id="select_name">
+                  <input type="text" id="text_name" name="name" value="">
+                </div>
+            </div>
+        </div>
         {% for key, val in dropdown_menus.items() %}
         <div class="containerbar" id="attribute_{{ key | idify }}" data-type="{{ val }}">
             <p class="testlabel">{{ key }}</p>
@@ -44,6 +52,8 @@
             <button class="roll" id="roll_{{ key | idify }}">roll</button>
         </div>
         {% endfor %}
+        <button class="roll" id="roll_all">Roll All</button>
+        <button class="roll" id="submit">Submit</button>
     </div>
 </div>
 <script src="../static/js/dropdown.js"></script>

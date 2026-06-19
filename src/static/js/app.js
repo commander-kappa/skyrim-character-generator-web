@@ -11,6 +11,18 @@ var ATTRIBUTES = [
     'start',
     'specification'
 ];
+function makeRequest(json) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'submit', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(json);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var response = xhr.responseText;
+            console.log(response);
+        }
+    };
+}
 var attributesContainer = document.getElementById('attributes');
 var attributesCollection = attributesContainer === null || attributesContainer === void 0 ? void 0 : attributesContainer.children;
 function setSelectOption(attribute_id, value, name) {
@@ -41,6 +53,27 @@ function getMajorSkillIDs() {
             continue;
         }
     }
+    return out;
+}
+function getSkillToSkillIDs() {
+    var out = [];
+    for (var i = 1; i < 4; i++) {
+        var selectElement = document.getElementById('major_skill_' + i);
+        var val = parseInt(selectElement.value);
+        if (val == 0) {
+            continue;
+        }
+        for (var _i = 0, _a = PROXY.get('SkillToSkill'); _i < _a.length; _i++) {
+            var mn = _a[_i];
+            if (mn.one == val) {
+                out.push(mn.two);
+            }
+            else if (mn.two == val) {
+                out.push(mn.one);
+            }
+        }
+    }
+    console.log(out);
     return out;
 }
 function blockSKillOptions(ids) {
@@ -137,13 +170,13 @@ function createCustomOptionElement(name, data_id) {
                 }
                 break;
             case 'major_skill_1':
-                blockSKillOptions(getMajorSkillIDs());
+                blockSKillOptions(getMajorSkillIDs().concat(getSkillToSkillIDs()));
                 break;
             case 'major_skill_2':
-                blockSKillOptions(getMajorSkillIDs());
+                blockSKillOptions(getMajorSkillIDs().concat(getSkillToSkillIDs()));
                 break;
             case 'major_skill_3':
-                blockSKillOptions(getMajorSkillIDs());
+                blockSKillOptions(getMajorSkillIDs().concat(getSkillToSkillIDs()));
                 break;
             case 'start':
                 loadSelectDataFor('specification');
@@ -261,13 +294,31 @@ function rollAttribute(id) {
 function rollAll() {
     for (var _i = 0, ATTRIBUTES_1 = ATTRIBUTES; _i < ATTRIBUTES_1.length; _i++) {
         var attribute = ATTRIBUTES_1[_i];
-        rollAttribute(attribute);
+        document.getElementById('roll_' + attribute).click();
     }
 }
-function initDropdown() {
-    var _a, _b, _c;
+document.getElementById('roll_all').addEventListener('click', function (event) {
+    rollAll();
+});
+document.getElementById('submit').addEventListener('click', function (event) {
+    var sheet_attributes = [];
     for (var _i = 0, ATTRIBUTES_2 = ATTRIBUTES; _i < ATTRIBUTES_2.length; _i++) {
         var attribute = ATTRIBUTES_2[_i];
+        var attributeElement = document.getElementById(attribute);
+        sheet_attributes.push(parseInt(attributeElement.value));
+    }
+    var textElement = document.getElementById('text_name');
+    var sheet = {
+        name: textElement.value,
+        vals: sheet_attributes
+    };
+    console.log(sheet);
+    makeRequest(JSON.stringify(sheet));
+});
+function initDropdown() {
+    var _a, _b, _c;
+    for (var _i = 0, ATTRIBUTES_3 = ATTRIBUTES; _i < ATTRIBUTES_3.length; _i++) {
+        var attribute = ATTRIBUTES_3[_i];
         loadSelectDataFor(attribute);
         (_a = document.getElementById('lock_' + attribute)) === null || _a === void 0 ? void 0 : _a.addEventListener('change', function (event) {
             var target = event.target;

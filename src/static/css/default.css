@@ -156,6 +156,18 @@ input[type=checkbox]:hover:not(:checked) + label    {
     padding: 0 0 0 0px;
 }
 
+#select_name {
+  width: 80%
+}
+#text_name{
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #ddd;
+  font-size: large;
+  text-align: center;
+}
+
 .testlabel {
     font-size: 1.25em;
     color: #dddddd;

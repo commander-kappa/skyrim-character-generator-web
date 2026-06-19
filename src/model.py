@@ -2,9 +2,11 @@ from sqlalchemy import ForeignKey
 from app import db
 
 TABLES = []
+SHEET_TABLES = []
 
 class Race(db.Model):
     TABLES.append(__qualname__)
+    SHEET_TABLES.append(__qualname__)
     __tablename__ = 'race'
     
     id = db.Column(db.SmallInteger, primary_key=True, nullable=False, autoincrement=True)
@@ -18,6 +20,7 @@ class Race(db.Model):
 
 class Sign(db.Model):
     TABLES.append(__qualname__)
+    SHEET_TABLES.append(__qualname__)
     __tablename__ = 'sign'
     
     id = db.Column(db.SmallInteger, primary_key=True, nullable=False, autoincrement=True)
@@ -29,6 +32,7 @@ class Sign(db.Model):
 
 class Religion(db.Model):
     TABLES.append(__qualname__)
+    SHEET_TABLES.append(__qualname__)
     __tablename__ = 'religion'
     
     id = db.Column(db.SmallInteger, primary_key=True, nullable=False, autoincrement=True)
@@ -39,6 +43,9 @@ class Religion(db.Model):
 
 class Skill(db.Model):
     TABLES.append(__qualname__)
+    SHEET_TABLES.append(__qualname__)
+    SHEET_TABLES.append(__qualname__)
+    SHEET_TABLES.append(__qualname__)
     __tablename__ = 'skill'
     
     id = db.Column(db.SmallInteger, primary_key=True, nullable=False, autoincrement=True)
@@ -50,6 +57,7 @@ class Skill(db.Model):
 
 class Personality(db.Model):
     TABLES.append(__qualname__)
+    SHEET_TABLES.append(__qualname__)
     __tablename__ = 'personality'
     
     id = db.Column(db.SmallInteger, primary_key=True, nullable=False, autoincrement=True)
@@ -60,6 +68,7 @@ class Personality(db.Model):
 
 class Start(db.Model):
     TABLES.append(__qualname__)
+    SHEET_TABLES.append(__qualname__)
     __tablename__ = 'start'
     
     id = db.Column(db.SmallInteger, primary_key=True, nullable=False, autoincrement=True)
@@ -72,6 +81,7 @@ class Start(db.Model):
 
 class Specification(db.Model):
     TABLES.append(__qualname__)
+    SHEET_TABLES.append(__qualname__)
     __tablename__ = 'specification'
     
     id = db.Column(db.SmallInteger, primary_key=True, nullable=False, autoincrement=True)
@@ -102,18 +112,35 @@ class SkillToSkill(db.Model):
         return f"{self.one} -> {self.two}"
 
 class Sheet(db.Model):
-    #INFO: Sheets should be seperate
-    #TABLES.append(__qualname__)
+    TABLES.append(__qualname__)
     __tablename__ = 'sheet'
     
+    def __init__(
+        self,
+        name='', 
+        attributes = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ):
+        self.name=name
+        self.race=attributes[0]
+        self.sign=attributes[1]
+        self.religion=attributes[2]
+        self.skill_one=attributes[3]
+        self.skill_two=attributes[4]
+        self.skill_three=attributes[5]
+        self.personality=attributes[6]
+        self.start=attributes[7]
+        self.specification=attributes[8]
+    
+
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     name = db.Column(db.String(32), nullable=False)
     race = db.Column(db.SmallInteger, db.ForeignKey("race.id"), nullable=False)
-    religion = db.Column(db.SmallInteger, db.ForeignKey("religion.id"), nullable=False)
     sign = db.Column(db.SmallInteger, db.ForeignKey("sign.id"), nullable=False)
-    personality = db.Column(db.SmallInteger, db.ForeignKey("personality.id"), nullable=False)
-    start = db.Column(db.SmallInteger, db.ForeignKey("start.id"), nullable=False)
-    specification = db.Column(db.SmallInteger, db.ForeignKey("specification.id"), nullable=True)
+    religion = db.Column(db.SmallInteger, db.ForeignKey("religion.id"), nullable=False)
     skill_one = db.Column(db.SmallInteger, db.ForeignKey("skill.id"), nullable=False)
     skill_two = db.Column(db.SmallInteger, db.ForeignKey("skill.id"), nullable=False)
     skill_three = db.Column(db.SmallInteger, db.ForeignKey("skill.id"), nullable=False)        
+    personality = db.Column(db.SmallInteger, db.ForeignKey("personality.id"), nullable=False)
+    start = db.Column(db.SmallInteger, db.ForeignKey("start.id"), nullable=False)
+    specification = db.Column(db.SmallInteger, db.ForeignKey("specification.id"), nullable=True)
+
